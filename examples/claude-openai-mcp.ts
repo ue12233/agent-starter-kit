@@ -11,16 +11,19 @@ const DEFAULT_README_PATH = path.resolve(process.cwd(), "README.md");
 const DEFAULT_MCP_ROOT = process.env.MCP_ROOT_DIR || process.cwd();
 const DEFAULT_OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4.1-mini";
 const DEFAULT_CLAUDE_MODEL = process.env.CLAUDE_MODEL || "claude-opus-4-6";
+const DEFAULT_QUESTION =
+  "Produce a one-sentence positioning summary, three reasons this repo feels useful to developers, and two concrete next-step ideas to increase stars.";
 const USAGE = `Usage: npm run demo -- [options]
 
 Options:
   --provider <claude|openai>  Choose which model provider to call
   --file <path>               Choose which file to read through MCP
   --mcp-root <path>           Set the filesystem MCP root directory
+  --question <text>           Customize the question sent to the model
   --help                      Show this help message`;
 
-const KNOWN_FLAGS = new Set(["--provider", "--file", "--mcp-root", "--help", "-h"]);
-const FLAGS_WITH_VALUES = new Set(["--provider", "--file", "--mcp-root"]);
+const KNOWN_FLAGS = new Set(["--provider", "--file", "--mcp-root", "--question", "--help", "-h"]);
+const FLAGS_WITH_VALUES = new Set(["--provider", "--file", "--mcp-root", "--question"]);
 
 type Provider = "claude" | "openai";
 
@@ -33,6 +36,7 @@ export interface DemoOptions {
   provider: Provider;
   targetFile: string;
   mcpRoot: string;
+  question: string;
 }
 
 function hasFlag(argv: string[], flag: string): boolean {
@@ -167,7 +171,18 @@ async function readFileViaMcp(targetFile: string, mcpRoot: string): Promise<stri
   }
 }
 
-async function summarizeWithClaude(fileContents: string): Promise<string> {
+export function buildPrompt(question: string, fileContents: string): string {
+  return `You are reviewing a public GitHub starter repository file. Answer the user's question based only on the file content below.
+
+Question:
+${question}
+
+File content:
+
+${fileContents}`;
+}
+
+async function summarizeWithClaude(fileContents: string, question: string): Promise<string> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     throw new Error("Missing ANTHROPIC_API_KEY.");
@@ -182,7 +197,7 @@ async function summarizeWithClaude(fileContents: string): Promise<string> {
     messages: [
       {
         role: "user",
-        content: `You are reviewing a public GitHub starter repository README. Based on the content below, produce:\n1. a one-sentence positioning summary\n2. three reasons this repo feels useful to developers\n3. two concrete next-step ideas to increase stars\n\nREADME:\n\n${fileContents}`,
+        content: buildPrompt(question, fileContents),
       },
     ],
   });
@@ -194,7 +209,7 @@ async function summarizeWithClaude(fileContents: string): Promise<string> {
     .trim();
 }
 
-async function summarizeWithOpenAI(fileContents: string): Promise<string> {
+async function summarizeWithOpenAI(fileContents: string, question: string): Promise<string> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error("Missing OPENAI_API_KEY.");
@@ -204,8 +219,8 @@ async function summarizeWithOpenAI(fileContents: string): Promise<string> {
   const response = await client.responses.create({
     model: DEFAULT_OPENAI_MODEL,
     instructions:
-      "You are reviewing a public GitHub starter repository README. Return a concise summary with one positioning sentence, three reasons it feels useful to developers, and two next-step ideas to increase stars.",
-    input: fileContents,
+      "You are reviewing a public GitHub starter repository file. Answer the user's question based only on the provided file content.",
+    input: buildPrompt(question, fileContents),
   });
 
   return response.output_text.trim();
@@ -216,6 +231,7 @@ export function parseOptions(argv: string[]): DemoOptions {
 
   const targetFile = path.resolve(readOption(argv, "--file") || DEFAULT_README_PATH);
   const mcpRoot = path.resolve(readOption(argv, "--mcp-root") || DEFAULT_MCP_ROOT);
+  const question = readOption(argv, "--question") || DEFAULT_QUESTION;
 
   ensurePathInsideRoot(targetFile, mcpRoot);
 
@@ -223,6 +239,7 @@ export function parseOptions(argv: string[]): DemoOptions {
     provider: parseProvider(argv),
     targetFile,
     mcpRoot,
+    question,
   };
 }
 
@@ -237,14 +254,15 @@ export async function main(argv: string[] = process.argv.slice(2)): Promise<void
   console.log(`provider: ${options.provider}`);
   console.log(`mcp root: ${options.mcpRoot}`);
   console.log(`target file: ${options.targetFile}`);
+  console.log(`question: ${options.question.length} characters`);
 
   const fileContents = await readFileViaMcp(options.targetFile, options.mcpRoot);
   console.log(`mcp: loaded ${path.basename(options.targetFile)} via filesystem MCP`);
 
   const summary =
     options.provider === "claude"
-      ? await summarizeWithClaude(fileContents)
-      : await summarizeWithOpenAI(fileContents);
+      ? await summarizeWithClaude(fileContents, options.question)
+      : await summarizeWithOpenAI(fileContents, options.question);
 
   console.log("\n--- model output ---\n");
   console.log(summary);

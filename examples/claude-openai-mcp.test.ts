@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import path from "node:path";
 
-import { formatUsage, parseOptions, parseProvider } from "./claude-openai-mcp.js";
+import { buildPrompt, formatUsage, parseOptions, parseProvider } from "./claude-openai-mcp.js";
 
 const repoRoot = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 
@@ -35,7 +35,24 @@ test("parseOptions reads provider, file, and mcp root flags", () => {
     provider: "openai",
     targetFile: path.join(repoRoot, "README.md"),
     mcpRoot: repoRoot,
+    question:
+      "Produce a one-sentence positioning summary, three reasons this repo feels useful to developers, and two concrete next-step ideas to increase stars.",
   });
+});
+
+test("parseOptions reads custom question flag", () => {
+  const options = parseOptions([
+    "--provider",
+    "openai",
+    "--file",
+    "README.md",
+    "--mcp-root",
+    repoRoot,
+    "--question",
+    "List three setup risks",
+  ]);
+
+  assert.equal(options.question, "List three setup risks");
 });
 
 test("parseOptions reads inline flag values", () => {
@@ -49,6 +66,8 @@ test("parseOptions reads inline flag values", () => {
     provider: "openai",
     targetFile: path.join(repoRoot, "README.md"),
     mcpRoot: repoRoot,
+    question:
+      "Produce a one-sentence positioning summary, three reasons this repo feels useful to developers, and two concrete next-step ideas to increase stars.",
   });
 });
 
@@ -117,5 +136,14 @@ test("formatUsage documents supported flags", () => {
   assert.match(usage, /--provider <claude\|openai>/);
   assert.match(usage, /--file <path>/);
   assert.match(usage, /--mcp-root <path>/);
+  assert.match(usage, /--question <text>/);
   assert.match(usage, /--help/);
+});
+
+test("buildPrompt includes the file contents and custom question", () => {
+  const prompt = buildPrompt("Explain the installation steps", "# Demo\n\nRun npm install.");
+
+  assert.match(prompt, /Explain the installation steps/);
+  assert.match(prompt, /# Demo/);
+  assert.match(prompt, /Run npm install\./);
 });
