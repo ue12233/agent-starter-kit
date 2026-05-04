@@ -33,6 +33,13 @@ npm run build
 npm start
 ```
 
+Run the local verification commands:
+
+```bash
+npm test
+npm run check
+```
+
 Run the MCP example:
 
 ```bash

@@ -33,6 +33,13 @@ npm run build
 npm start
 ```
 
+运行本地校验命令：
+
+```bash
+npm test
+npm run check
+```
+
 运行 MCP 示例：
 
 ```bash

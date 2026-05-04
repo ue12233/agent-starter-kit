@@ -4,27 +4,64 @@ import Anthropic from "@anthropic-ai/sdk";
 import OpenAI from "openai";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 
 const DEFAULT_README_PATH = path.resolve(process.cwd(), "README.md");
 const DEFAULT_MCP_ROOT = process.env.MCP_ROOT_DIR || process.cwd();
 const DEFAULT_OPENAI_MODEL = process.env.OPENAI_MODEL || "gpt-4.1-mini";
 const DEFAULT_CLAUDE_MODEL = process.env.CLAUDE_MODEL || "claude-opus-4-6";
+const USAGE = `Usage: npm run demo -- [options]
+
+Options:
+  --provider <claude|openai>  Choose which model provider to call
+  --file <path>               Choose which file to read through MCP
+  --mcp-root <path>           Set the filesystem MCP root directory
+  --help                      Show this help message`;
 
 type Provider = "claude" | "openai";
 
-interface DemoOptions {
+type MappedTextBlock = {
+  type: "text";
+  text: string;
+};
+
+export interface DemoOptions {
   provider: Provider;
   targetFile: string;
   mcpRoot: string;
 }
 
-function parseProvider(argv: string[]): Provider {
-  const providerFlag = argv.find((arg) => arg.startsWith("--provider"));
-  const providerValue = providerFlag?.includes("=")
-    ? providerFlag.split("=")[1]
-    : argv[argv.indexOf("--provider") + 1];
+function hasFlag(argv: string[], flag: string): boolean {
+  return argv.includes(flag);
+}
+
+function readOption(argv: string[], flag: string): string | undefined {
+  const inlinePrefix = `${flag}=`;
+  const inlineOption = argv.find((arg) => arg.startsWith(inlinePrefix));
+  if (inlineOption) {
+    return inlineOption.slice(inlinePrefix.length);
+  }
+
+  const optionIndex = argv.indexOf(flag);
+  if (optionIndex === -1) {
+    return undefined;
+  }
+
+  const value = argv[optionIndex + 1];
+  if (!value || value.startsWith("--")) {
+    throw new Error(`Missing value for ${flag}.`);
+  }
+
+  return value;
+}
+
+export function formatUsage(): string {
+  return USAGE;
+}
+
+export function parseProvider(argv: string[]): Provider {
+  const providerValue = readOption(argv, "--provider");
   const envProvider = process.env.AI_PROVIDER;
   const value = (providerValue || envProvider || "claude").toLowerCase();
 
@@ -35,9 +72,21 @@ function parseProvider(argv: string[]): Provider {
   return value;
 }
 
+function ensurePathInsideRoot(targetFile: string, mcpRoot: string): void {
+  const relativePath = path.relative(mcpRoot, targetFile);
+  if (relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
+    throw new Error(
+      `Target file must stay inside the MCP root. Received file '${targetFile}' with root '${mcpRoot}'.`,
+    );
+  }
+}
+
 function collectText(content: Array<{ type: string; text?: string }>): string {
   return content
-    .filter((block) => block.type === "text" && typeof block.text === "string")
+    .filter(
+      (block): block is MappedTextBlock =>
+        block.type === "text" && typeof block.text === "string",
+    )
     .map((block) => block.text)
     .join("\n")
     .trim();
@@ -117,16 +166,26 @@ async function summarizeWithOpenAI(fileContents: string): Promise<string> {
   return response.output_text.trim();
 }
 
-function parseOptions(argv: string[]): DemoOptions {
+export function parseOptions(argv: string[]): DemoOptions {
+  const targetFile = path.resolve(readOption(argv, "--file") || DEFAULT_README_PATH);
+  const mcpRoot = path.resolve(readOption(argv, "--mcp-root") || DEFAULT_MCP_ROOT);
+
+  ensurePathInsideRoot(targetFile, mcpRoot);
+
   return {
     provider: parseProvider(argv),
-    targetFile: DEFAULT_README_PATH,
-    mcpRoot: DEFAULT_MCP_ROOT,
+    targetFile,
+    mcpRoot,
   };
 }
 
-async function main(): Promise<void> {
-  const options = parseOptions(process.argv.slice(2));
+export async function main(argv: string[] = process.argv.slice(2)): Promise<void> {
+  if (hasFlag(argv, "--help") || hasFlag(argv, "-h")) {
+    console.log(formatUsage());
+    return;
+  }
+
+  const options = parseOptions(argv);
 
   console.log(`provider: ${options.provider}`);
   console.log(`mcp root: ${options.mcpRoot}`);
@@ -144,8 +203,14 @@ async function main(): Promise<void> {
   console.log(summary);
 }
 
-main().catch((error) => {
-  const message = error instanceof Error ? error.message : String(error);
-  console.error(`demo failed: ${message}`);
-  process.exitCode = 1;
-});
+const isMain = process.argv[1]
+  ? import.meta.url === pathToFileURL(process.argv[1]).href
+  : false;
+
+if (isMain) {
+  main().catch((error) => {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`demo failed: ${message}`);
+    process.exitCode = 1;
+  });
+}

@@ -11,7 +11,9 @@
     "start": "node dist/src/index.js",
     "demo": "tsx examples/claude-openai-mcp.ts",
     "demo:claude": "tsx examples/claude-openai-mcp.ts --provider claude",
-    "demo:openai": "tsx examples/claude-openai-mcp.ts --provider openai"
+    "demo:openai": "tsx examples/claude-openai-mcp.ts --provider openai",
+    "check": "npm run build",
+    "test": "tsx --test examples/claude-openai-mcp.test.ts"
   },
   "keywords": [
     "ai",

@@ -38,6 +38,12 @@ Use the default provider from `.env`:
 npm run demo
 ```
 
+Show the available flags:
+
+```bash
+npm run demo -- --help
+```
+
 Run Claude explicitly:
 
 ```bash
@@ -48,6 +54,12 @@ Run OpenAI explicitly:
 
 ```bash
 npm run demo:openai
+```
+
+You can also point the demo at a different file or MCP root:
+
+```bash
+npm run demo -- --provider claude --file README.md --mcp-root .
 ```
 
 ### What this demo proves
