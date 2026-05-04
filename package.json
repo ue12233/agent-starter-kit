@@ -1,5 +1,5 @@
 {
-  "name": "agent-starter-kit",
+  "name": "agent-kit",
   "version": "0.2.1",
   "private": false,
   "description": "A TypeScript starter for building and shipping AI agent products.",

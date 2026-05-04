@@ -62,6 +62,18 @@ You can also point the demo at a different file or MCP root:
 npm run demo -- --provider claude --file README.md --mcp-root .
 ```
 
+Inline flag values are also supported:
+
+```bash
+npm run demo -- --provider=openai --file=README.md --mcp-root=.
+```
+
+### Argument validation
+
+- unknown flags fail fast with `Unknown option: ...`
+- positional arguments are rejected
+- `--file` must stay inside `--mcp-root`
+
 ### What this demo proves
 
 - the MCP path is real, not mocked
@@ -74,6 +86,10 @@ npm run demo -- --provider claude --file README.md --mcp-root .
   - add your Anthropic API key to `.env`
 - `demo failed: Missing OPENAI_API_KEY.`
   - add your OpenAI API key to `.env`
+- `demo failed: Unknown option: --foo. Use --help to see supported flags.`
+  - check the flag name or run `npm run demo -- --help`
+- `demo failed: Unexpected positional argument: README.md.`
+  - pass file paths with `--file <path>` or `--file=<path>`
 - `demo failed: MCP tool returned an error...`
   - ensure `MCP_ROOT_DIR` includes the repository path
 - `npx` not found

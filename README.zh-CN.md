@@ -1,4 +1,4 @@
-# agent-starter-kit 中文说明
+# agent-kit 中文说明
 
 一个用于构建小型 AI Agent 项目的 TypeScript 起步仓库，内置 Claude、OpenAI 和 MCP 友好的示例。
 
@@ -13,8 +13,8 @@
 ## 安装
 
 ```bash
-git clone https://github.com/ue12233/agent-starter-kit.git
-cd agent-starter-kit
+git clone https://github.com/ue12233/agent-kit.git
+cd agent-kit
 npm install
 ```
 
@@ -58,7 +58,7 @@ npm run demo:openai
 ## 项目结构
 
 ```txt
-agent-starter-kit/
+agent-kit/
 ├─ assets/
 │  └─ demo-preview.svg
 ├─ examples/

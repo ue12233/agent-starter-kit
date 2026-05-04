@@ -22,7 +22,7 @@ function renderIntro(items: StarterFeature[]): string {
   const lines = items.map((item) => `- ${item.name}: ${item.description}`);
 
   return [
-    "agent-starter-kit",
+    "agent-kit",
     "",
     "Build AI agent products with a repo structure designed for speed, demos, and iteration.",
     "",

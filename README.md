@@ -1,4 +1,4 @@
-# agent-starter-kit
+# agent-kit
 
 A TypeScript starter for building small AI agent projects with Claude, OpenAI, and MCP-friendly examples.
 
@@ -13,8 +13,8 @@ A TypeScript starter for building small AI agent projects with Claude, OpenAI, a
 ## Installation
 
 ```bash
-git clone https://github.com/ue12233/agent-starter-kit.git
-cd agent-starter-kit
+git clone https://github.com/ue12233/agent-kit.git
+cd agent-kit
 npm install
 ```
 
@@ -58,7 +58,7 @@ More details: [`examples/README.md`](./examples/README.md)
 ## Project structure
 
 ```txt
-agent-starter-kit/
+agent-kit/
 ├─ assets/
 │  └─ demo-preview.svg
 ├─ examples/

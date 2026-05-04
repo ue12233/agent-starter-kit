@@ -19,9 +19,12 @@ Options:
   --mcp-root <path>           Set the filesystem MCP root directory
   --help                      Show this help message`;
 
+const KNOWN_FLAGS = new Set(["--provider", "--file", "--mcp-root", "--help", "-h"]);
+const FLAGS_WITH_VALUES = new Set(["--provider", "--file", "--mcp-root"]);
+
 type Provider = "claude" | "openai";
 
-type MappedTextBlock = {
+type TextBlock = {
   type: "text";
   text: string;
 };
@@ -39,8 +42,13 @@ function hasFlag(argv: string[], flag: string): boolean {
 function readOption(argv: string[], flag: string): string | undefined {
   const inlinePrefix = `${flag}=`;
   const inlineOption = argv.find((arg) => arg.startsWith(inlinePrefix));
-  if (inlineOption) {
-    return inlineOption.slice(inlinePrefix.length);
+  if (inlineOption !== undefined) {
+    const inlineValue = inlineOption.slice(inlinePrefix.length);
+    if (!inlineValue) {
+      throw new Error(`Missing value for ${flag}.`);
+    }
+
+    return inlineValue;
   }
 
   const optionIndex = argv.indexOf(flag);
@@ -49,11 +57,40 @@ function readOption(argv: string[], flag: string): string | undefined {
   }
 
   const value = argv[optionIndex + 1];
-  if (!value || value.startsWith("--")) {
+  if (!value || value.startsWith("-")) {
     throw new Error(`Missing value for ${flag}.`);
   }
 
   return value;
+}
+
+function validateArguments(argv: string[]): void {
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+
+    if (!arg.startsWith("-")) {
+      throw new Error(`Unexpected positional argument: ${arg}.`);
+    }
+
+    if (!arg.startsWith("--")) {
+      if (arg !== "-h") {
+        throw new Error(`Unknown option: ${arg}. Use --help to see supported flags.`);
+      }
+      continue;
+    }
+
+    const [flag, inlineValue] = arg.split("=", 2);
+    if (!KNOWN_FLAGS.has(flag)) {
+      throw new Error(`Unknown option: ${flag}. Use --help to see supported flags.`);
+    }
+
+    if (FLAGS_WITH_VALUES.has(flag) && inlineValue === undefined) {
+      const value = argv[index + 1];
+      if (value && !value.startsWith("-")) {
+        index += 1;
+      }
+    }
+  }
 }
 
 export function formatUsage(): string {
@@ -81,19 +118,27 @@ function ensurePathInsideRoot(targetFile: string, mcpRoot: string): void {
   }
 }
 
-function collectText(content: Array<{ type: string; text?: string }>): string {
-  return content
-    .filter(
-      (block): block is MappedTextBlock =>
-        block.type === "text" && typeof block.text === "string",
-    )
-    .map((block) => block.text)
-    .join("\n")
-    .trim();
+function isTextBlock(block: unknown): block is TextBlock {
+  return (
+    typeof block === "object" &&
+    block !== null &&
+    "type" in block &&
+    block.type === "text" &&
+    "text" in block &&
+    typeof block.text === "string"
+  );
+}
+
+function collectText(content: unknown): string {
+  if (!Array.isArray(content)) {
+    return "";
+  }
+
+  return content.filter(isTextBlock).map((block) => block.text).join("\n").trim();
 }
 
 async function readFileViaMcp(targetFile: string, mcpRoot: string): Promise<string> {
-  const client = new Client({ name: "agent-starter-kit-demo", version: "0.2.1" });
+  const client = new Client({ name: "agent-kit-demo", version: "0.2.1" });
   const transport = new StdioClientTransport({
     command: process.platform === "win32" ? "npx.cmd" : "npx",
     args: ["-y", "@modelcontextprotocol/server-filesystem", mcpRoot],
@@ -111,7 +156,7 @@ async function readFileViaMcp(targetFile: string, mcpRoot: string): Promise<stri
       throw new Error(`MCP tool returned an error while reading ${targetFile}.`);
     }
 
-    const text = collectText(result.content as Array<{ type: string; text?: string }>);
+    const text = collectText(result.content);
     if (!text) {
       throw new Error(`MCP returned no text for ${targetFile}.`);
     }
@@ -167,6 +212,8 @@ async function summarizeWithOpenAI(fileContents: string): Promise<string> {
 }
 
 export function parseOptions(argv: string[]): DemoOptions {
+  validateArguments(argv);
+
   const targetFile = path.resolve(readOption(argv, "--file") || DEFAULT_README_PATH);
   const mcpRoot = path.resolve(readOption(argv, "--mcp-root") || DEFAULT_MCP_ROOT);
 
