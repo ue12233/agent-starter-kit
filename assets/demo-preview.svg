@@ -1,0 +1,25 @@
+<svg width="1280" height="760" viewBox="0 0 1280 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="760" rx="28" fill="#0B1020"/>
+  <rect x="34" y="34" width="1212" height="692" rx="22" fill="#111827" stroke="#1F2937"/>
+  <circle cx="76" cy="76" r="10" fill="#F87171"/>
+  <circle cx="108" cy="76" r="10" fill="#FBBF24"/>
+  <circle cx="140" cy="76" r="10" fill="#34D399"/>
+  <text x="176" y="84" fill="#9CA3AF" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace" font-size="22">ai-agent-starter demo preview</text>
+
+  <text x="72" y="142" fill="#34D399" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace" font-size="26">$ npm run demo:claude</text>
+  <text x="72" y="190" fill="#E5E7EB" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace" font-size="22">&gt; provider: claude-opus-4-6</text>
+  <text x="72" y="226" fill="#E5E7EB" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace" font-size="22">&gt; mcp: mcp-server-filesystem connected</text>
+  <text x="72" y="262" fill="#E5E7EB" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace" font-size="22">&gt; file: README.md loaded through MCP</text>
+
+  <rect x="72" y="302" width="1136" height="158" rx="18" fill="#0F172A" stroke="#1E293B"/>
+  <text x="100" y="346" fill="#60A5FA" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace" font-size="24">Claude summary</text>
+  <text x="100" y="388" fill="#E5E7EB" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace" font-size="21">This repo is positioned as a forkable TypeScript starter for AI agent products,</text>
+  <text x="100" y="420" fill="#E5E7EB" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace" font-size="21">with MCP-ready examples, public-launch documentation, and a path toward</text>
+  <text x="100" y="452" fill="#E5E7EB" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace" font-size="21">real provider integrations for Claude and OpenAI.</text>
+
+  <rect x="72" y="500" width="1136" height="170" rx="18" fill="#0F172A" stroke="#1E293B"/>
+  <text x="100" y="544" fill="#A78BFA" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace" font-size="24">Why it feels real</text>
+  <text x="100" y="586" fill="#E5E7EB" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace" font-size="21">- Uses a local filesystem MCP server instead of mocked file reads</text>
+  <text x="100" y="618" fill="#E5E7EB" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace" font-size="21">- Swaps between Claude and OpenAI with the same prompt path</text>
+  <text x="100" y="650" fill="#E5E7EB" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace" font-size="21">- Ships as a single starter-ready demo you can extend in minutes</text>
+</svg>

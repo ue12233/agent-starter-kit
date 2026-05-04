@@ -2,7 +2,44 @@
 
 > 一个面向 AI Agent 产品的开源 TypeScript 起步仓库，目标是让你能更快地 fork、演示、扩展并发布。
 
-[English README](./README.md)
+[English README](./README.md) · [Examples](./examples/README.md)
+
+![License](https://img.shields.io/badge/license-MIT-black.svg)
+![TypeScript](https://img.shields.io/badge/built%20with-TypeScript-3178C6.svg)
+![Claude](https://img.shields.io/badge/Claude-Opus%204.6-7C3AED)
+![OpenAI](https://img.shields.io/badge/OpenAI-ready-10A37F)
+![MCP](https://img.shields.io/badge/MCP-filesystem%20demo-0EA5E9)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+
+如果你想做一个**容易理解、容易演示、容易 fork、还能继续长成真实 AI 产品**的仓库，这个项目就是一个合适起点。
+
+## 这个仓库有什么不一样
+
+- **不只是 README 好看** —— 现在已经带了一个真正能跑的 Claude / OpenAI / MCP 示例。
+- **体量小，理解快** —— 一个 starter，加一个可运行示例，没有额外框架负担。
+- **天然适合公开发布** —— 文档、演示路径和目录结构都按“适合传播”来设计。
+
+## 效果预览
+
+![ai-agent-starter demo preview](./assets/demo-preview.svg)
+
+这个最小 CLI 示例会通过真实的文件系统 MCP server 读取 `README.md`，然后交给 Claude 或 OpenAI，从“项目发布审阅者”的视角做总结。
+
+## 快速演示
+
+```bash
+cp .env.example .env
+npm install
+npm run demo:claude
+```
+
+切换到 OpenAI：
+
+```bash
+npm run demo:openai
+```
+
+更多说明见：[`examples/README.md`](./examples/README.md)
 
 ## 项目定位
 
@@ -29,10 +66,11 @@
 
 ## 当前包含内容
 
-目前首版提供：
+目前 `v0.2` 提供：
 
 - TypeScript 项目骨架
-- 最小可运行入口
+- 最小可运行 starter 入口
+- 一个真实的 `Claude / OpenAI / MCP` CLI 示例
 - `examples/` 示例目录
 - `templates/` 模板目录
 - 面向公开发布优化过的 README
@@ -40,7 +78,7 @@
 你可以在这个基础上继续添加：
 
 - 模型提供商接入（Claude / OpenAI / 本地模型）
-- MCP 集成示例
+- 更多 MCP 集成示例
 - Prompt 管理方式
 - Eval/Benchmark 流程
 - 部署模版
@@ -49,10 +87,15 @@
 
 ```txt
 ai-agent-starter/
+├─ assets/
+│  └─ demo-preview.svg
+├─ examples/
+│  ├─ README.md
+│  └─ claude-openai-mcp.ts
 ├─ src/
 │  └─ index.ts
-├─ examples/
 ├─ templates/
+├─ .env.example
 ├─ .gitignore
 ├─ package.json
 ├─ tsconfig.json
@@ -81,7 +124,9 @@ npm start
 - TypeScript
 - Node.js
 - tsx
-- 可扩展到 Claude / OpenAI / MCP / 自定义工具体系
+- Anthropic SDK
+- OpenAI SDK
+- Model Context Protocol（文件系统示例）
 
 ## 适合谁用
 
@@ -90,12 +135,18 @@ npm start
 - 想搭内部 copilot 或自动化助手的团队
 - 想运营一个更容易获得 star 的公开 AI 仓库的人
 
+## 这个示例证明了什么
+
+- 这个仓库可以调用真实 MCP server，而不是 mock 文件访问
+- 这个仓库可以在 Claude 和 OpenAI 之间复用同一套高层流程
+- 这个 starter 虽然轻，但已经具备继续长成真实项目的基础
+
 ## 后续路线图
 
 ### 近期
 
 - [ ] 增加 Claude / OpenAI 风格 provider adapter
-- [ ] 增加 MCP 集成示例
+- [x] 增加 MCP 集成示例
 - [ ] 增加 Prompt 组织方案
 - [ ] 增加 Eval 工作流示例
 - [ ] 增加部署说明（如 Vercel / Node runtime）

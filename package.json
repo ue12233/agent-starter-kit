@@ -1,14 +1,17 @@
 {
   "name": "ai-agent-starter",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": false,
   "description": "A TypeScript starter for building and shipping AI agent products.",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsx src/index.ts",
-    "start": "node dist/index.js"
+    "start": "node dist/src/index.js",
+    "demo": "tsx examples/claude-openai-mcp.ts",
+    "demo:claude": "tsx examples/claude-openai-mcp.ts --provider claude",
+    "demo:openai": "tsx examples/claude-openai-mcp.ts --provider openai"
   },
   "keywords": [
     "ai",
@@ -16,11 +19,21 @@
     "starter",
     "typescript",
     "mcp",
-    "llm"
+    "llm",
+    "claude",
+    "openai"
   ],
   "author": "ue12233",
   "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.92.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "dotenv": "^17.4.2",
+    "openai": "^6.35.0"
+  },
   "devDependencies": {
+    "@modelcontextprotocol/server-filesystem": "^2026.1.14",
+    "@types/node": "^25.6.0",
     "tsx": "^4.20.0",
     "typescript": "^5.9.3"
   }
