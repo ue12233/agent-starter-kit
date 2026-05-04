@@ -1,0 +1,27 @@
+{
+  "name": "ai-agent-starter",
+  "version": "0.1.0",
+  "private": false,
+  "description": "A TypeScript starter for building and shipping AI agent products.",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "starter",
+    "typescript",
+    "mcp",
+    "llm"
+  ],
+  "author": "ue12233",
+  "license": "MIT",
+  "devDependencies": {
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.3"
+  }
+}
