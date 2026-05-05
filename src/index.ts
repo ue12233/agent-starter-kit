@@ -1,9 +1,12 @@
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+
 export interface StarterFeature {
   name: string;
   description: string;
 }
 
-const features: StarterFeature[] = [
+export const starterFeatures = [
   {
     name: "Agent-first structure",
     description: "A clean project shape for AI agents, tools, prompts, and workflows.",
@@ -16,9 +19,9 @@ const features: StarterFeature[] = [
     name: "Ship-fast defaults",
     description: "TypeScript, build scripts, examples, and a README made for public launch.",
   },
-];
+] satisfies readonly StarterFeature[];
 
-function renderIntro(items: StarterFeature[]): string {
+export function renderIntro(items: readonly StarterFeature[] = starterFeatures): string {
   const lines = items.map((item) => `- ${item.name}: ${item.description}`);
 
   return [
@@ -30,4 +33,14 @@ function renderIntro(items: StarterFeature[]): string {
   ].join("\n");
 }
 
-console.log(renderIntro(features));
+export function main(): void {
+  console.log(renderIntro());
+}
+
+const isMain = process.argv[1]
+  ? import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href
+  : false;
+
+if (isMain) {
+  main();
+}

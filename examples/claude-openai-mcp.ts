@@ -25,7 +25,7 @@ Options:
 const KNOWN_FLAGS = new Set(["--provider", "--file", "--mcp-root", "--question", "--help", "-h"]);
 const FLAGS_WITH_VALUES = new Set(["--provider", "--file", "--mcp-root", "--question"]);
 
-type Provider = "claude" | "openai";
+export type Provider = "claude" | "openai";
 
 type TextBlock = {
   type: "text";
@@ -39,11 +39,11 @@ export interface DemoOptions {
   question: string;
 }
 
-function hasFlag(argv: string[], flag: string): boolean {
+function hasFlag(argv: readonly string[], flag: string): boolean {
   return argv.includes(flag);
 }
 
-function readOption(argv: string[], flag: string): string | undefined {
+function readOption(argv: readonly string[], flag: string): string | undefined {
   const inlinePrefix = `${flag}=`;
   const inlineOption = argv.find((arg) => arg.startsWith(inlinePrefix));
   if (inlineOption !== undefined) {
@@ -68,7 +68,7 @@ function readOption(argv: string[], flag: string): string | undefined {
   return value;
 }
 
-function validateArguments(argv: string[]): void {
+function validateArguments(argv: readonly string[]): void {
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
 
@@ -101,7 +101,7 @@ export function formatUsage(): string {
   return USAGE;
 }
 
-export function parseProvider(argv: string[]): Provider {
+export function parseProvider(argv: readonly string[]): Provider {
   const providerValue = readOption(argv, "--provider");
   const envProvider = process.env.AI_PROVIDER;
   const value = (providerValue || envProvider || "claude").toLowerCase();
@@ -115,7 +115,7 @@ export function parseProvider(argv: string[]): Provider {
 
 function ensurePathInsideRoot(targetFile: string, mcpRoot: string): void {
   const relativePath = path.relative(mcpRoot, targetFile);
-  if (relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
+  if (!relativePath || relativePath.startsWith("..") || path.isAbsolute(relativePath)) {
     throw new Error(
       `Target file must stay inside the MCP root. Received file '${targetFile}' with root '${mcpRoot}'.`,
     );
@@ -226,7 +226,7 @@ async function summarizeWithOpenAI(fileContents: string, question: string): Prom
   return response.output_text.trim();
 }
 
-export function parseOptions(argv: string[]): DemoOptions {
+export function parseOptions(argv: readonly string[]): DemoOptions {
   validateArguments(argv);
 
   const targetFile = path.resolve(readOption(argv, "--file") || DEFAULT_README_PATH);
@@ -243,7 +243,7 @@ export function parseOptions(argv: string[]): DemoOptions {
   };
 }
 
-export async function main(argv: string[] = process.argv.slice(2)): Promise<void> {
+export async function main(argv: readonly string[] = process.argv.slice(2)): Promise<void> {
   if (hasFlag(argv, "--help") || hasFlag(argv, "-h")) {
     console.log(formatUsage());
     return;

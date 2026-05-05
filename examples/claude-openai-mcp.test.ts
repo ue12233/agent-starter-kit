@@ -2,16 +2,21 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import path from "node:path";
 
-import { buildPrompt, formatUsage, parseOptions, parseProvider } from "./claude-openai-mcp.js";
+import { buildPrompt, formatUsage, parseOptions, parseProvider, type Provider } from "./claude-openai-mcp.js";
 
 const repoRoot = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 
-test("parseProvider defaults to claude", () => {
+function withEnvProvider(value: string | undefined, callback: () => void): void {
   const previousProvider = process.env.AI_PROVIDER;
-  delete process.env.AI_PROVIDER;
+
+  if (value === undefined) {
+    delete process.env.AI_PROVIDER;
+  } else {
+    process.env.AI_PROVIDER = value;
+  }
 
   try {
-    assert.equal(parseProvider([]), "claude");
+    callback();
   } finally {
     if (previousProvider === undefined) {
       delete process.env.AI_PROVIDER;
@@ -19,6 +24,30 @@ test("parseProvider defaults to claude", () => {
       process.env.AI_PROVIDER = previousProvider;
     }
   }
+}
+
+test("parseProvider defaults to claude", () => {
+  withEnvProvider(undefined, () => {
+    assert.equal(parseProvider([]), "claude");
+  });
+});
+
+test("parseProvider reads AI_PROVIDER when no flag is passed", () => {
+  withEnvProvider("openai", () => {
+    assert.equal(parseProvider([]), "openai");
+  });
+});
+
+test("parseProvider lets explicit flags override AI_PROVIDER", () => {
+  withEnvProvider("openai", () => {
+    assert.equal(parseProvider(["--provider", "claude"]), "claude");
+  });
+});
+
+test("Provider type accepts only supported providers", () => {
+  const providers = ["claude", "openai"] satisfies Provider[];
+
+  assert.deepEqual(providers, ["claude", "openai"]);
 });
 
 test("parseOptions reads provider, file, and mcp root flags", () => {
@@ -69,6 +98,13 @@ test("parseOptions reads inline flag values", () => {
     question:
       "Produce a one-sentence positioning summary, three reasons this repo feels useful to developers, and two concrete next-step ideas to increase stars.",
   });
+});
+
+test("parseOptions rejects the MCP root itself as a target file", () => {
+  assert.throws(
+    () => parseOptions(["--file", repoRoot, "--mcp-root", repoRoot]),
+    /Target file must stay inside the MCP root/,
+  );
 });
 
 test("parseOptions rejects a target file outside the MCP root", () => {
@@ -127,6 +163,11 @@ test("parseOptions rejects flags where values are required", () => {
   assert.throws(
     () => parseOptions(["--provider", "--bogus"]),
     /Unknown option: --bogus/,
+  );
+
+  assert.throws(
+    () => parseOptions(["--question"]),
+    /Missing value for --question/,
   );
 });
 

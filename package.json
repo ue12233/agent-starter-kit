@@ -6,14 +6,15 @@
   "type": "module",
   "main": "dist/src/index.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "dev": "tsx src/index.ts",
     "start": "node dist/src/index.js",
     "demo": "tsx examples/claude-openai-mcp.ts",
     "demo:claude": "tsx examples/claude-openai-mcp.ts --provider claude",
     "demo:openai": "tsx examples/claude-openai-mcp.ts --provider openai",
-    "check": "npm run build",
-    "test": "tsx --test examples/claude-openai-mcp.test.ts"
+    "check": "npm run typecheck && npm run build",
+    "test": "tsx --test src/index.test.ts examples/claude-openai-mcp.test.ts"
   },
   "keywords": [
     "ai",

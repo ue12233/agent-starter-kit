@@ -59,8 +59,11 @@ Run tests and type checking:
 
 ```bash
 npm test
+npm run typecheck
 npm run check
 ```
+
+`npm run typecheck` validates every TypeScript source and test without writing files. `npm run check` runs type checking and then builds publishable JavaScript into `dist/`.
 
 ## Environment setup
 
@@ -152,12 +155,14 @@ agent-kit/
 │  ├─ claude-openai-mcp.test.ts
 │  └─ claude-openai-mcp.ts
 ├─ src/
+│  ├─ index.test.ts
 │  └─ index.ts
 ├─ templates/
 ├─ .env.example
 ├─ .gitignore
 ├─ package.json
 ├─ tsconfig.json
+├─ tsconfig.build.json
 ├─ README.md
 └─ README.zh-CN.md
 ```
