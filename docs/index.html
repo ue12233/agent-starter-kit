@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>agent-kit | Agent Navigation</title>
+    <meta
+      name="description"
+      content="A concise navigation hub for agent frameworks, skills, MCP servers, and builder tools."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="agent-kit home">
+        <span class="brand-mark">ak</span>
+        <span>agent-kit</span>
+      </a>
+      <nav class="topnav" aria-label="Primary navigation">
+        <a href="#agents">Agents</a>
+        <a href="#skills">Skills</a>
+        <a href="#mcp">MCP</a>
+        <a href="#tools">Tools</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="intro" aria-labelledby="page-title">
+        <div class="intro-copy">
+          <p class="eyebrow">Agent builder navigation</p>
+          <h1 id="page-title">Build agents from the right starting point.</h1>
+          <p class="lede">
+            Curated entry points for agent frameworks, reusable skills, MCP servers, and practical
+            tools. Keep the stack small, know what each layer does, and move from research to code.
+          </p>
+        </div>
+        <aside class="stack-map" aria-label="Agent stack map">
+          <div class="stack-row">
+            <span>Interface</span>
+            <strong>Web app, CLI, workflow</strong>
+          </div>
+          <div class="stack-row">
+            <span>Agent runtime</span>
+            <strong>Planning, tools, memory</strong>
+          </div>
+          <div class="stack-row">
+            <span>Skills</span>
+            <strong>Reusable instructions</strong>
+          </div>
+          <div class="stack-row">
+            <span>MCP</span>
+            <strong>Files, APIs, live context</strong>
+          </div>
+        </aside>
+      </section>
+
+      <section class="controls" aria-label="Resource filters">
+        <label class="search">
+          <span>Search resources</span>
+          <input
+            id="resource-search"
+            type="search"
+            placeholder="Search agents, skills, MCP, tools..."
+            autocomplete="off"
+          />
+        </label>
+        <div class="filters" role="group" aria-label="Filter by category">
+          <button class="filter is-active" type="button" data-filter="all">All</button>
+          <button class="filter" type="button" data-filter="agent">Agents</button>
+          <button class="filter" type="button" data-filter="skill">Skills</button>
+          <button class="filter" type="button" data-filter="mcp">MCP</button>
+          <button class="filter" type="button" data-filter="tool">Tools</button>
+        </div>
+      </section>
+
+      <section class="quick-links" aria-label="Quick start links">
+        <a href="https://github.com/ue12233/agent-kit/blob/main/README.md">
+          <span>Read the repository guide</span>
+          <strong>README.md</strong>
+        </a>
+        <a href="https://github.com/ue12233/agent-kit/blob/main/examples/README.md">
+          <span>Run the Claude/OpenAI MCP demo</span>
+          <strong>Examples</strong>
+        </a>
+        <a href="https://github.com/ue12233/agent-kit">
+          <span>Fork or star the project</span>
+          <strong>GitHub</strong>
+        </a>
+      </section>
+
+      <section id="agents" class="resource-section" aria-labelledby="agents-title">
+        <div class="section-heading">
+          <p class="eyebrow">01</p>
+          <div>
+            <h2 id="agents-title">Agent Frameworks</h2>
+            <p>Pick the runtime that matches your control-flow, memory, and deployment needs.</p>
+          </div>
+        </div>
+        <div class="resource-grid">
+          <article
+            class="resource-card accent-blue"
+            data-kind="agent"
+            data-search="openai agents sdk tools handoffs guardrails tracing mcp typescript python"
+          >
+            <div class="card-meta">
+              <span>Agent</span>
+              <a href="https://platform.openai.com/docs/guides/agents-sdk/">Open</a>
+            </div>
+            <h3>OpenAI Agents SDK</h3>
+            <p>Lightweight SDK for agents with tools, handoffs, guardrails, tracing, and MCP.</p>
+            <p class="best-for">Best for TypeScript or Python apps that need production-grade agent primitives.</p>
+          </article>
+          <article
+            class="resource-card accent-green"
+            data-kind="agent"
+            data-search="langgraph langchain orchestration state memory human in the loop workflows"
+          >
+            <div class="card-meta">
+              <span>Agent</span>
+              <a href="https://docs.langchain.com/oss/javascript/langgraph">Open</a>
+            </div>
+            <h3>LangGraph</h3>
+            <p>Low-level orchestration for long-running, stateful, human-in-the-loop agents.</p>
+            <p class="best-for">Best for durable workflows where explicit graph state matters.</p>
+          </article>
+          <article
+            class="resource-card accent-amber"
+            data-kind="agent"
+            data-search="vercel ai sdk agents streaming nextjs typescript web tools"
+          >
+            <div class="card-meta">
+              <span>Agent</span>
+              <a href="https://ai-sdk.dev/docs/agents/overview">Open</a>
+            </div>
+            <h3>Vercel AI SDK Agents</h3>
+            <p>Agent loops and tool calling that fit naturally into full-stack web apps.</p>
+            <p class="best-for">Best for Next.js and TypeScript products that stream agent output.</p>
+          </article>
+          <article
+            class="resource-card accent-rose"
+            data-kind="agent"
+            data-search="crewai crew ai multi agent roles flows tasks automation"
+          >
+            <div class="card-meta">
+              <span>Agent</span>
+              <a href="https://docs.crewai.com/">Open</a>
+            </div>
+            <h3>CrewAI</h3>
+            <p>Framework for role-based multi-agent crews, flows, tasks, and automations.</p>
+            <p class="best-for">Best for collaborative agents with clear roles and processes.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="skills" class="resource-section" aria-labelledby="skills-title">
+        <div class="section-heading">
+          <p class="eyebrow">02</p>
+          <div>
+            <h2 id="skills-title">Agent Skills</h2>
+            <p>Package repeatable workflows so agents can load the right instructions on demand.</p>
+          </div>
+        </div>
+        <div class="resource-grid">
+          <article
+            class="resource-card accent-green"
+            data-kind="skill"
+            data-search="agent skills standard skill md portable workflow instructions"
+          >
+            <div class="card-meta">
+              <span>Skill</span>
+              <a href="https://agentskills.io/">Open</a>
+            </div>
+            <h3>Agent Skills Standard</h3>
+            <p>Open format for portable skill folders with SKILL.md, scripts, and references.</p>
+            <p class="best-for">Best for reusable, versioned procedures across agent tools.</p>
+          </article>
+          <article
+            class="resource-card accent-blue"
+            data-kind="skill"
+            data-search="agent skills specification frontmatter validation skill md"
+          >
+            <div class="card-meta">
+              <span>Skill</span>
+              <a href="https://agentskills.io/specification">Open</a>
+            </div>
+            <h3>Skills Specification</h3>
+            <p>Exact SKILL.md frontmatter, directory structure, and validation rules.</p>
+            <p class="best-for">Best for writing skills that clients can discover reliably.</p>
+          </article>
+          <article
+            class="resource-card accent-amber"
+            data-kind="skill"
+            data-search="claude code skills slash commands reusable coding workflow"
+          >
+            <div class="card-meta">
+              <span>Skill</span>
+              <a href="https://docs.claude.com/en/docs/claude-code/skills">Open</a>
+            </div>
+            <h3>Claude Code Skills</h3>
+            <p>Create, manage, invoke, and share Claude Code skills with supporting files.</p>
+            <p class="best-for">Best for turning repeated coding workflows into reusable actions.</p>
+          </article>
+          <article
+            class="resource-card accent-rose"
+            data-kind="skill"
+            data-search="prompt engineering guide instructions examples structured outputs quality"
+          >
+            <div class="card-meta">
+              <span>Skill</span>
+              <a href="https://platform.openai.com/docs/guides/prompt-engineering">Open</a>
+            </div>
+            <h3>Prompt Engineering Guide</h3>
+            <p>Practical guidance for instructions, context, examples, and structured outputs.</p>
+            <p class="best-for">Best for improving the instruction body inside agents and skills.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="mcp" class="resource-section" aria-labelledby="mcp-title">
+        <div class="section-heading">
+          <p class="eyebrow">03</p>
+          <div>
+            <h2 id="mcp-title">MCP Servers</h2>
+            <p>Connect agents to files, APIs, databases, repos, and live context safely.</p>
+          </div>
+        </div>
+        <div class="resource-grid">
+          <article
+            class="resource-card accent-blue"
+            data-kind="mcp"
+            data-search="model context protocol mcp clients servers tools resources prompts"
+          >
+            <div class="card-meta">
+              <span>MCP</span>
+              <a href="https://modelcontextprotocol.io/docs">Open</a>
+            </div>
+            <h3>Model Context Protocol</h3>
+            <p>Official MCP documentation for clients, servers, tools, resources, and prompts.</p>
+            <p class="best-for">Best for understanding the protocol before choosing servers.</p>
+          </article>
+          <article
+            class="resource-card accent-green"
+            data-kind="mcp"
+            data-search="mcp example servers filesystem git memory fetch time"
+          >
+            <div class="card-meta">
+              <span>MCP</span>
+              <a href="https://modelcontextprotocol.io/examples">Open</a>
+            </div>
+            <h3>MCP Example Servers</h3>
+            <p>Reference servers for filesystem, Git, memory, fetch, time, and more.</p>
+            <p class="best-for">Best for finding a known-good server pattern before custom code.</p>
+          </article>
+          <article
+            class="resource-card accent-amber"
+            data-kind="mcp"
+            data-search="mcp typescript sdk node bun deno custom server client"
+          >
+            <div class="card-meta">
+              <span>MCP</span>
+              <a href="https://github.com/modelcontextprotocol/typescript-sdk">Open</a>
+            </div>
+            <h3>MCP TypeScript SDK</h3>
+            <p>Official TypeScript SDK for building MCP servers and clients.</p>
+            <p class="best-for">Best for Node, Bun, or Deno projects that need custom integrations.</p>
+          </article>
+          <article
+            class="resource-card accent-rose"
+            data-kind="mcp"
+            data-search="smithery mcp registry discover install publish community servers"
+          >
+            <div class="card-meta">
+              <span>MCP</span>
+              <a href="https://smithery.ai/">Open</a>
+            </div>
+            <h3>Smithery</h3>
+            <p>Registry for discovering, installing, and publishing community MCP servers.</p>
+            <p class="best-for">Best for finding a connector before committing to custom code.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="tools" class="resource-section" aria-labelledby="tools-title">
+        <div class="section-heading">
+          <p class="eyebrow">04</p>
+          <div>
+            <h2 id="tools-title">Builder Tools</h2>
+            <p>Round out the agent stack with cookbooks, sandboxes, browser control, and evals.</p>
+          </div>
+        </div>
+        <div class="resource-grid">
+          <article
+            class="resource-card accent-green"
+            data-kind="tool"
+            data-search="openai cookbook recipes model calls retrieval evals structured output agents"
+          >
+            <div class="card-meta">
+              <span>Tool</span>
+              <a href="https://cookbook.openai.com/">Open</a>
+            </div>
+            <h3>OpenAI Cookbook</h3>
+            <p>Runnable recipes for model calls, retrieval, evals, structured output, and agents.</p>
+            <p class="best-for">Best for copyable implementation patterns.</p>
+          </article>
+          <article
+            class="resource-card accent-blue"
+            data-kind="tool"
+            data-search="claude code terminal coding agent file editing command execution github mcp"
+          >
+            <div class="card-meta">
+              <span>Tool</span>
+              <a href="https://docs.claude.com/en/docs/claude-code/overview">Open</a>
+            </div>
+            <h3>Claude Code</h3>
+            <p>Terminal coding agent with file editing, command execution, GitHub automation, and MCP.</p>
+            <p class="best-for">Best for repository-level implementation, debugging, and releases.</p>
+          </article>
+          <article
+            class="resource-card accent-amber"
+            data-kind="tool"
+            data-search="e2b sandbox cloud execution isolated agent generated code notebooks"
+          >
+            <div class="card-meta">
+              <span>Tool</span>
+              <a href="https://e2b.dev/docs">Open</a>
+            </div>
+            <h3>E2B Sandbox</h3>
+            <p>Secure cloud sandboxes for running agent-generated code and tools.</p>
+            <p class="best-for">Best for isolated execution environments for code or notebooks.</p>
+          </article>
+          <article
+            class="resource-card accent-rose"
+            data-kind="tool"
+            data-search="browser use browser automation agent inspect operate web apps qa research"
+          >
+            <div class="card-meta">
+              <span>Tool</span>
+              <a href="https://docs.browser-use.com/">Open</a>
+            </div>
+            <h3>Browser Use</h3>
+            <p>Browser automation layer that lets agents inspect and operate web apps.</p>
+            <p class="best-for">Best for research, QA, and workflows that need a real browser.</p>
+          </article>
+        </div>
+      </section>
+
+      <p id="empty-state" class="empty-state" hidden>No matching resources.</p>
+    </main>
+
+    <footer class="footer">
+      <span>agent-kit is a compact directory plus a runnable TypeScript MCP demo.</span>
+      <a href="https://github.com/ue12233/agent-kit">GitHub</a>
+    </footer>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>

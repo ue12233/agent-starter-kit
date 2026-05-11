@@ -1,30 +1,35 @@
 # agent-kit
 
-A TypeScript starter kit for building small AI agent projects with Claude, OpenAI, and MCP tools.
+A concise navigation hub for agent builders: agent frameworks, reusable skills, MCP servers, and practical tools in one clean directory.
 
-[中文说明](./README.zh-CN.md) · [Examples](./examples/README.md)
+[Navigation site](./docs/index.html) | [中文说明](./README.zh-CN.md) | [MCP demo](./examples/README.md)
 
-## Why this exists
+## What this is
 
-Most agent experiments start as a quick script and become hard to ship: provider code is mixed with prompts, tool access is unclear, and the README does not explain how to reproduce the demo.
+`agent-kit` is being shaped as a practical starting page for people building agents. It keeps the repo simple:
 
-`agent-kit` gives you a small, readable baseline for public AI agent projects:
+- a clean resource directory for agents, skills, MCP, and tools
+- a static navigation page under `docs/` that can be opened directly or published with GitHub Pages
+- a TypeScript data model for the curated resource list
+- a runnable Claude/OpenAI demo that reads files through a real filesystem MCP server
+- tests and build scripts so the examples stay verifiable
 
-- a TypeScript/Node.js project that builds cleanly
-- a provider-switchable Claude/OpenAI demo
-- a real MCP filesystem example, not a mocked tool call
-- CLI argument validation with useful errors
-- tests for the demo's option parsing and prompt generation
-- launch-friendly documentation you can extend as your agent grows
+## Navigation categories
 
-## Features
+| Category | Use it for | Included examples |
+| --- | --- | --- |
+| Agent Frameworks | Choosing the orchestration/runtime layer | OpenAI Agents SDK, LangGraph, Vercel AI SDK Agents, CrewAI |
+| Agent Skills | Packaging repeatable workflows and instructions | Agent Skills Standard, Skills Specification, Claude Code Skills, Prompt Engineering Guide |
+| MCP Servers | Connecting agents to files, APIs, repos, and live context | MCP docs, example servers, TypeScript SDK, Smithery |
+| Builder Tools | Filling gaps around coding, execution, browser work, and recipes | OpenAI Cookbook, Claude Code, E2B Sandbox, Browser Use |
 
-- **Claude and OpenAI support** — choose the provider with `--provider`, `AI_PROVIDER`, or the npm shortcut scripts.
-- **MCP filesystem integration** — reads files through `@modelcontextprotocol/server-filesystem` over stdio.
-- **Custom model question** — use `--question` to ask the model anything about the file loaded through MCP.
-- **Safe file scoping** — `--file` must stay inside `--mcp-root`, which helps avoid accidental path traversal.
-- **Typed CLI example** — `parseOptions`, provider selection, prompt creation, and error handling are testable TypeScript functions.
-- **Simple verification flow** — `npm test` and `npm run check` are enough to validate the starter.
+Open the static site locally:
+
+```bash
+start docs/index.html
+```
+
+Or serve the repository with any static server and visit `/docs/`.
 
 ## Requirements
 
@@ -40,22 +45,7 @@ cd agent-kit
 npm install
 ```
 
-## Quick start
-
-Run the starter entrypoint:
-
-```bash
-npm run dev
-```
-
-Build and run the compiled output:
-
-```bash
-npm run build
-npm start
-```
-
-Run tests and type checking:
+## Verify the project
 
 ```bash
 npm test
@@ -63,9 +53,26 @@ npm run typecheck
 npm run check
 ```
 
-`npm run typecheck` validates every TypeScript source and test without writing files. `npm run check` runs type checking and then builds publishable JavaScript into `dist/`.
+`npm run check` runs TypeScript type checking and then builds publishable JavaScript into `dist/`.
 
-## Environment setup
+## Use the TypeScript navigation data
+
+The root package exports the same navigation model used by the README concept:
+
+```ts
+import { getResourcesByKind, navigationSections } from "agent-kit";
+
+const mcpResources = getResourcesByKind("mcp");
+console.log(navigationSections.length, mcpResources.map((resource) => resource.name));
+```
+
+Run the starter entrypoint:
+
+```bash
+npm run dev
+```
+
+## Run the MCP demo
 
 Create a local `.env` file:
 
@@ -84,38 +91,23 @@ OPENAI_MODEL=gpt-4.1-mini
 MCP_ROOT_DIR=.
 ```
 
-Only one provider key is required if you only run one mode.
-
-## Run the MCP demo
-
-Use the provider configured in `.env`:
+Run the demo with the provider configured in `.env`:
 
 ```bash
 npm run demo
 ```
 
-Run Claude explicitly:
+Run a specific provider:
 
 ```bash
 npm run demo:claude
-```
-
-Run OpenAI explicitly:
-
-```bash
 npm run demo:openai
 ```
 
 Ask a custom question about a file:
 
 ```bash
-npm run demo -- --provider claude --file README.md --mcp-root . --question "Explain the setup steps for a new contributor"
-```
-
-Inline flag values work too:
-
-```bash
-npm run demo -- --provider=openai --file=README.md --mcp-root=. --question="List three ways to improve this repo"
+npm run demo -- --provider claude --file README.md --mcp-root . --question "Explain this repo to a new agent builder"
 ```
 
 ## CLI options
@@ -128,81 +120,43 @@ npm run demo -- --provider=openai --file=README.md --mcp-root=. --question="List
 --help                      Show the help message
 ```
 
-Defaults:
-
-- `--provider`: `AI_PROVIDER`, then `claude`
-- `--file`: `README.md`
-- `--mcp-root`: `MCP_ROOT_DIR`, then the current repository
-- `--question`: a short repository-review prompt
-
-## What happens in the demo
-
-1. The CLI parses and validates the flags.
-2. It starts the filesystem MCP server with `npx -y @modelcontextprotocol/server-filesystem`.
-3. It reads the target file through the MCP tool `read_text_file`.
-4. It builds a prompt from your `--question` and the file contents.
-5. It calls Claude or OpenAI.
-6. It prints the model response in the terminal.
-
 ## Project structure
 
 ```txt
 agent-kit/
-├─ assets/
-│  └─ demo-preview.svg
-├─ examples/
-│  ├─ README.md
-│  ├─ claude-openai-mcp.test.ts
-│  └─ claude-openai-mcp.ts
-├─ src/
-│  ├─ index.test.ts
-│  └─ index.ts
-├─ templates/
-├─ .env.example
-├─ .gitignore
-├─ package.json
-├─ tsconfig.json
-├─ tsconfig.build.json
-├─ README.md
-└─ README.zh-CN.md
+  assets/
+  docs/
+    index.html
+    styles.css
+    app.js
+  examples/
+    README.md
+    claude-openai-mcp.ts
+    claude-openai-mcp.test.ts
+  src/
+    index.ts
+    index.test.ts
+  .env.example
+  package.json
+  README.md
+  README.zh-CN.md
 ```
 
-## Scripts
+## Common demo issues
 
-- `npm run dev` — run the starter entrypoint from `src/index.ts`
-- `npm run build` — compile TypeScript into `dist/`
-- `npm start` — run the compiled starter entrypoint
-- `npm run demo` — run the MCP/provider demo
-- `npm run demo:claude` — run the demo with Claude
-- `npm run demo:openai` — run the demo with OpenAI
-- `npm test` — run the Node test suite through `tsx --test`
-- `npm run check` — run the TypeScript build check
-
-## Common issues
-
-- `demo failed: Missing ANTHROPIC_API_KEY.` — add `ANTHROPIC_API_KEY` to `.env`, or run OpenAI mode.
-- `demo failed: Missing OPENAI_API_KEY.` — add `OPENAI_API_KEY` to `.env`, or run Claude mode.
-- `demo failed: Unknown option: --foo.` — run `npm run demo -- --help` and check the flag name.
-- `demo failed: Unexpected positional argument: README.md.` — pass paths with `--file README.md`.
-- `demo failed: Target file must stay inside the MCP root.` — set `--mcp-root` to a parent directory of the target file.
-- `npx not found` — install Node.js/npm or make sure npm is on your shell PATH.
-
-## Extending the starter
-
-Good next additions:
-
-- add a provider adapter interface under `src/providers/`
-- move prompt templates into `templates/`
-- add more MCP servers under `examples/`
-- add structured JSON output for agent responses
-- add evaluation fixtures for regression testing prompts
+- `demo failed: Missing ANTHROPIC_API_KEY.` Add `ANTHROPIC_API_KEY` to `.env`, or run OpenAI mode.
+- `demo failed: Missing OPENAI_API_KEY.` Add `OPENAI_API_KEY` to `.env`, or run Claude mode.
+- `demo failed: Unknown option: --foo.` Run `npm run demo -- --help` and check the flag name.
+- `demo failed: Target file must stay inside the MCP root.` Set `--mcp-root` to a parent directory of the target file.
+- `npx not found` Install Node.js/npm or make sure npm is on your shell PATH.
 
 ## Roadmap
 
 - [x] Add MCP example
 - [x] Add custom question support for the demo
-- [ ] Add more provider adapters
-- [ ] Add prompt organization examples
+- [x] Add agent navigation data and static docs page
+- [ ] Add more MCP server notes and copyable setup snippets
+- [ ] Add skill templates under `templates/`
 - [ ] Add evaluation workflow examples
 
 ## License

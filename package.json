@@ -2,7 +2,7 @@
   "name": "agent-kit",
   "version": "0.2.1",
   "private": false,
-  "description": "A TypeScript starter for building and shipping AI agent products.",
+  "description": "A curated navigation hub for agent frameworks, skills, MCP servers, and builder tools.",
   "type": "module",
   "main": "dist/src/index.js",
   "scripts": {
@@ -19,7 +19,9 @@
   "keywords": [
     "ai",
     "agent",
-    "starter",
+    "navigation",
+    "skills",
+    "tools",
     "typescript",
     "mcp",
     "llm",

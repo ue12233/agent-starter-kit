@@ -1,10 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { buildPrompt, formatUsage, parseOptions, parseProvider, type Provider } from "./claude-openai-mcp.js";
 
-const repoRoot = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 function withEnvProvider(value: string | undefined, callback: () => void): void {
   const previousProvider = process.env.AI_PROVIDER;
